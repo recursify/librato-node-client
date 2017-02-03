@@ -2,50 +2,6 @@ import {EventEmitter} from 'events'
 import * as R from 'ramda'
 const request = require('request')
 
-interface LibratoClientConfig {
-  email: string,
-  token: string,
-  prefix?: string,
-  period?: number,
-}
-
-interface IncrementOptions {
-  amount?: number,
-  sporadic?: true,
-  source?: string
-}
-
-// old-style metrics
-interface Gauge {
-  name: string,
-  value: number,
-  period: number,
-  source?: string,
-  attributes?: MetricAttributes,
-}
-
-interface MultiSampleGauge {
-  name: string,
-  count: number,
-  sum: number,
-  max: number,
-  min: number,
-  sum_squares: number,
-  period: number,
-  source?: string,
-  attributes?: MetricAttributes,
-}
-
-interface Credentials {
-  user: string,
-  pass: string,
-}
-
-interface MetricAttributes {
-  aggregate?: boolean,
-  summarize_function?: string,
-}
-
 const max = R.reduce(R.max, -Infinity)
 const min = R.reduce(R.min, Infinity)
 
@@ -177,7 +133,8 @@ export class LibratoClient extends EventEmitter {
   }
 
   /*
-    For reference: https://github.com/librato/librato-rack/blob/master/lib/librato/collector/counter_cache.rb
+    For reference:
+    https://github.com/librato/librato-rack/blob/master/lib/librato/collector/counter_cache.rb
   */
   increment(metric : string, options? : IncrementOptions) {
     const amount = options.amount || 1
