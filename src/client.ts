@@ -14,6 +14,17 @@ interface IncrementOptions {
   tags?: Object
 }
 
+interface Measurement {
+  name: string,
+  value: number,
+}
+
+function postToLibrato(measurements : Measurement[]) {
+  for(let m in measurements) {
+    console.log(m)
+  }
+}
+
 export class LibratoClient extends EventEmitter {
   config: LibratoClientConfig
 
