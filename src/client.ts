@@ -1,4 +1,5 @@
 import {EventEmitter} from 'events'
+const request = require('request')
 
 interface LibratoClientConfig {
   email: string,
@@ -11,18 +12,47 @@ interface IncrementOptions {
   amount?: number,
   sporadic?: true,
   source?: string
-  tags?: Object
 }
 
-interface Measurement {
+// old-style metrics
+interface Gauge {
   name: string,
   value: number,
+  period: number,
+  source?: string,
+  attributes?: MetricAttributes,
 }
 
-function postToLibrato(measurements : Measurement[]) {
-  for(let m in measurements) {
-    console.log(m)
+interface Credentials {
+  user: string,
+  pass: string,
+}
+
+interface MetricAttributes {
+  aggregate?: boolean,
+  summarize_function?: string,
+}
+
+const endpoint = 'https://metrics-api.librato.com/v1'
+
+async function postToLibrato(creds : Credentials, gauges : Gauge[]) {
+  let body = {
+    gauges: gauges,
   }
+  const options = {
+    method: 'POST',
+    uri: `${endpoint}/metrics`,
+    auth: creds,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  }
+  console.log(options)
+  request(options, (err, resp, body) => {
+    console.log('done', resp.statusCode, body)
+  })
+
 }
 
 export class LibratoClient extends EventEmitter {
@@ -32,13 +62,20 @@ export class LibratoClient extends EventEmitter {
   protected interval : NodeJS.Timer
   protected period : number
   protected sporadics : Set<string>
+  protected creds : Credentials
 
   constructor(config : LibratoClientConfig) {
     super()
     this.config = config
+    this.creds = {
+      user: this.config.email,
+      pass: this.config.token,
+    }
     this.period = config.period || 60000
     this.counters = {}
     this.sporadics = new Set()
+
+
   }
 
   start() {
@@ -53,7 +90,22 @@ export class LibratoClient extends EventEmitter {
   }
 
   submitCounters() {
-    console.log('flushing', this.counters)
+    const gauges : Gauge[] = []
+    const attributes = {
+      aggregate: true
+    }
+    for(let metric in this.counters) {
+      gauges.push({
+        name: metric,
+        value: this.counters[metric],
+        period: this.period/1000,
+        attributes: {
+          aggregate: true,
+          summarize_function: 'sum',
+        }
+      })
+    }
+    postToLibrato(this.creds, gauges)
   }
 
   resetCounters() {
