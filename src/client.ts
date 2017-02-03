@@ -23,6 +23,18 @@ interface Gauge {
   attributes?: MetricAttributes,
 }
 
+interface MultiSampleGauge {
+  name: string,
+  count: number,
+  sum: number,
+  max: number,
+  min: number,
+  sum_squares: number,
+  period: number,
+  source?: string,
+  attributes?: MetricAttributes,
+}
+
 interface Credentials {
   user: string,
   pass: string,
@@ -35,7 +47,9 @@ interface MetricAttributes {
 
 const endpoint = 'https://metrics-api.librato.com/v1'
 
-async function postToLibrato(creds : Credentials, gauges : Gauge[]) {
+async function postToLibrato(
+  creds : Credentials, gauges : Array<Gauge|MultiSampleGauge>
+) {
   let body = {
     gauges: gauges,
   }
