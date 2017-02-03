@@ -48,7 +48,6 @@ async function postToLibrato(creds : Credentials, gauges : Gauge[]) {
     },
     body: JSON.stringify(body),
   }
-  console.log(options)
   request(options, (err, resp, body) => {
     console.log('done', resp.statusCode, body)
   })
@@ -91,18 +90,18 @@ export class LibratoClient extends EventEmitter {
 
   submitCounters() {
     const gauges : Gauge[] = []
-    const attributes = {
-      aggregate: true
+
+    const attributes : MetricAttributes = {
+      aggregate: true,
+      summarize_function: 'sum',
     }
+
     for(let metric in this.counters) {
       gauges.push({
         name: metric,
         value: this.counters[metric],
         period: this.period/1000,
-        attributes: {
-          aggregate: true,
-          summarize_function: 'sum',
-        }
+        attributes: attributes,
       })
     }
     postToLibrato(this.creds, gauges)
