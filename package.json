@@ -2,12 +2,20 @@
   "name": "librato-node-client",
   "version": "0.1.0",
   "description": "Librato Client, written in TypeScript",
-  "main": "index.js",
+  "main": "dist/client.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "engines": {
+    "node": "~4.6.1"
+  },
   "author": "Kenshi Kawaguchi",
   "license": "ISC",
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "typescript": "^2.3.2",
+    "gulp-typescript": "^3.1.6"
+  },
   "dependencies": {
     "ramda": "^0.23.0",
     "request": "^2.81.0"
