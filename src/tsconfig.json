@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "../dist/",
+    "module":"commonjs",
+    "noLib": false,
+    "lib" : ["es6"],
+    "types" : ["node"],
+    "target":"es5"
+  }
+}
