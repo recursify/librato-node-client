@@ -49,8 +49,6 @@ export class LibratoClient extends EventEmitter {
     this.counters = {}
     this.gauges = {}
     this.sporadics = new Set()
-
-
   }
 
   start() {
@@ -67,11 +65,13 @@ export class LibratoClient extends EventEmitter {
     this.resetCounters()
   }
 
-  submitGauges() {
+  private submitGauges() {
     const gauges : MultiSampleGauge[] = []
     const attributes : MetricAttributes = {
       aggregate: true,
-      summarize_function: 'average', // good guess
+
+      // good guess: can be changed through web interface
+      summarize_function: 'average',
     }
 
     for(let metric in this.gauges) {
@@ -90,11 +90,14 @@ export class LibratoClient extends EventEmitter {
     postToLibrato(this.creds, gauges)
   }
 
-  resetGauges() {
+  private resetGauges() {
     this.gauges = {}
   }
 
-  submitCounters() {
+  // Counters don't use the Librato 'counter' type, but uses a gauge
+  // with server-side aggregation, and a summarize_function of 'sum'.
+  // This is what Librato's Ruby library does too
+  private submitCounters() {
     const gauges : Gauge[] = []
 
     const attributes : MetricAttributes = {
@@ -113,7 +116,7 @@ export class LibratoClient extends EventEmitter {
     postToLibrato(this.creds, gauges)
   }
 
-  resetCounters() {
+  private resetCounters() {
     for(let metric in this.sporadics.entries()) {
       delete this.counters[metric]
     }
