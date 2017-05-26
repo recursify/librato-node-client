@@ -4,7 +4,7 @@
   "description": "Librato Client, written in TypeScript",
   "main": "dist/client.js",
   "scripts": {
-    "install": "gulp typescript"
+    "prepare": "gulp typescript"
   },
   "engines": {
     "node": "~4.6.1"
@@ -14,7 +14,8 @@
   "devDependencies": {
     "gulp": "^3.8.11",
     "typescript": "^2.3.2",
-    "gulp-typescript": "^3.1.6"
+    "gulp-typescript": "^3.1.6",
+    "@types/node": "^7.0.22"
   },
   "dependencies": {
     "ramda": "^0.23.0",
