@@ -1,6 +1,6 @@
 import {EventEmitter} from 'events'
 import * as R from 'ramda'
-const request = require('request')
+const rp = require('request-promise')
 
 const max = R.reduce(R.max, -Infinity)
 const min = R.reduce(R.min, Infinity)
@@ -17,15 +17,10 @@ async function postToLibrato(
     method: 'POST',
     uri: `${endpoint}/metrics`,
     auth: creds,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
+    json: true,
+    body: body,
   }
-  request(options, (err, resp, body) => {
-    console.log('done', resp.statusCode, body)
-  })
-
+  return await rp(options)
 }
 
 export class LibratoClient extends EventEmitter {
@@ -65,7 +60,7 @@ export class LibratoClient extends EventEmitter {
     this.resetCounters()
   }
 
-  private submitGauges() {
+  private async submitGauges() {
     const gauges : MultiSampleGauge[] = []
     const attributes : MetricAttributes = {
       aggregate: true,
@@ -87,7 +82,11 @@ export class LibratoClient extends EventEmitter {
         attributes: attributes,
       })
     }
-    postToLibrato(this.creds, gauges)
+    try {
+      await postToLibrato(this.creds, gauges)
+    } catch (e) {
+      console.log(`Error posting gauges ${e}`)
+    }
   }
 
   private resetGauges() {
@@ -97,7 +96,7 @@ export class LibratoClient extends EventEmitter {
   // Counters don't use the Librato 'counter' type, but uses a gauge
   // with server-side aggregation, and a summarize_function of 'sum'.
   // This is what Librato's Ruby library does too
-  private submitCounters() {
+  private async submitCounters() {
     const gauges : Gauge[] = []
 
     const attributes : MetricAttributes = {
@@ -113,7 +112,11 @@ export class LibratoClient extends EventEmitter {
         attributes: attributes,
       })
     }
-    postToLibrato(this.creds, gauges)
+    try {
+      await postToLibrato(this.creds, gauges)
+    } catch (e) {
+      console.log(`Error posting counters ${e}`)
+    }
   }
 
   private resetCounters() {
