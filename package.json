@@ -17,6 +17,10 @@
     "gulp-typescript": "^3.1.6",
     "@types/node": "^7.0.22"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/recursify/librato-node-client"
+  },
   "dependencies": {
     "ramda": "^0.23.0",
     "request": "^2.81.0",
