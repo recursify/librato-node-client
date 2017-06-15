@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "module":"commonjs",
+    "noLib": false,
+    "lib" : ["es6"],
+    "types" : ["node", "jasmine"],
+    "target":"es5"
+  }
+}
