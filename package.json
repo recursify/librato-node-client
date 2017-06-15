@@ -12,10 +12,13 @@
   "author": "Kenshi Kawaguchi",
   "license": "ISC",
   "devDependencies": {
+    "@types/jasmine": "^2.5.52",
+    "@types/node": "^7.0.22",
     "gulp": "^3.8.11",
-    "typescript": "^2.3.2",
+    "gulp-jasmine": "^2.4.0",
     "gulp-typescript": "^3.1.6",
-    "@types/node": "^7.0.22"
+    "jasmine-spec-reporter": "^2.5.0",
+    "typescript": "^2.3.2"
   },
   "repository": {
     "type": "git",

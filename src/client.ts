@@ -112,6 +112,7 @@ export class LibratoClient extends EventEmitter {
         attributes: attributes,
       })
     }
+
     try {
       await postToLibrato(this.creds, gauges)
     } catch (e) {
@@ -157,6 +158,4 @@ export class LibratoClient extends EventEmitter {
     this.gauges[metricName] = this.gauges[metricName] || []
     this.gauges[metricName].push(value)
   }
-
-
 }
