@@ -3,6 +3,7 @@
   "version": "0.2.0",
   "description": "Librato Client, written in TypeScript",
   "main": "dist/client.js",
+  "types": "src/index.d.ts",
   "scripts": {
     "prepare": "gulp typescript"
   },

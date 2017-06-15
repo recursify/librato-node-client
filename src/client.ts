@@ -1,5 +1,8 @@
 import {EventEmitter} from 'events'
 import * as R from 'ramda'
+import {Credentials, Gauge, MultiSampleGauge, MetricAttributes,
+        LibratoClientConfig, IncrementOptions} from  './types'
+
 const rp = require('request-promise')
 
 const max = R.reduce(R.max, -Infinity)
